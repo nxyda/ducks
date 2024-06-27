@@ -47,19 +47,23 @@ class Duck(pygame.sprite.Sprite):
         self.rect.x += self.speedx
         self.rect.y += self.speedy
         if self.rect.top > screen_height or self.rect.left < 0 or self.rect.right > screen_width:
-            self.rect.x = random.randint(0, screen_width - self.rect.width)
-            self.rect.y = random.randint(-100, -40)
-            self.speedx = random.randint(-3, 3)
-            self.speedy = random.randint(1, 5)
+            self.kill()
 
 
 all_sprites = pygame.sprite.Group()
 ducks = pygame.sprite.Group()
 
-for i in range(10):
-    duck = Duck()
-    all_sprites.add(duck)
-    ducks.add(duck)
+
+def add_duck():
+    if len(ducks) < 5:
+        duck = Duck()
+        all_sprites.add(duck)
+        ducks.add(duck)
+
+
+for i in range(5):
+    add_duck()
+
 
 score = 0
 
@@ -75,10 +79,13 @@ while running:
             clicked_sprites = [s for s in ducks if s.rect.collidepoint(pos)]
             for duck in clicked_sprites:
                 score += 1
-                duck.rect.x = random.randint(0, screen_width - duck.rect.width)
-                duck.rect.y = random.randint(-100, -40)
+                duck.kill()
+                add_duck()
 
     all_sprites.update()
+
+
+    add_duck()
 
     screen.fill(WHITE)
     all_sprites.draw(screen)
